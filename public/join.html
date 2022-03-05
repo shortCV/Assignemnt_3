@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>user click Test</title>
+        <meta charset="utf-8" />
+        <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    </head>
+    <script src="https://unpkg.com/aframe-environment-component@1.2.0/dist/aframe-environment-component.min.js"></script>
+
+    <body>
+        <a-scene background="color:rgb(0, 0, 0);">
+            <a-entity camera wasd-controls look-controls position="0 1.6 0">
+                <a-entity cursor="rayOrigin:mouse;" raycaster="far:20; interval:200; objects:.interactive"></a-entity>
+            </a-entity>
+
+            <a-entity environment="preset: contact; groundColor: #101623; grid: cross; groundColor2: #cc8cd4; dressingColor: #b31947; gridColor: #b29ad6; dressingAmount: 30" visible=""><a-entity class="environment" position="0 50 0" light="type: hemisphere; color: #a3c6a9; intensity: 0.6; groundColor: #101623; dressingAmount:  30;" visible=""></a-entity><a-entity class="environment" position="0 2.01 -1" light="intensity: 0.6; shadowCameraLeft: -10; shadowCameraBottom: -10; shadowCameraRight: 10; shadowCameraTop: 10" visible=""></a-entity><a-entity rotation="-90 0 0" class="environmentGround environment" visible="" scale="1 1 4.91" shadow="cast: false; receive: false"></a-entity>
+                <a-entity class="environmentDressing environment" visible=""></a-entity>
+                <a-sky radius="200" theta-length="110" class="environment" material="shader: gradientshader; topColor: #76d5ca; bottomColor: #c799e5" visible="" geometry=""></a-sky>
+            </a-entity>
+
+            <a-entity class="circle interactive" position="0 3 0" geometry="primitive:sphere; radius:1; height:1;" material="color:#b31947"
+            animation__mouseenter="property:material.color; type:color; to:#40376E; startEvents:mouseenter; dur:200"
+            animation__mouseleave="property:material.color; type:color; to:#b31947; startEvents:mouseleave; dur:200"></a-entity>
+          </a-entity>
+
+        </a-scene>
+
+        <script src="/socket.io/socket.io.js"></script>
+
+    </body>
+</html>
+
