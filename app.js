@@ -37,19 +37,13 @@ io.on('connection', (socket) => {
 
     socket.on('circle', (data) => {
         console.log('enemy event received');
-        //points = points + 1;
         console.log(points++)
         console.log('', points);
 
-        /*const Context_AF = this;
-        Context_AF.enemyAttack      = document.querySelector('#enemy');
-        Context_AF.enemyAttack.setAttribute("visible",true, {dur:Context_AF.data.duration, enabled:true});*/
-
         if(points >= 3){
-            //Context_AF.enemyAttack.setAttribute("visible", false, {enabled:false});
+            io.sockets.emit('invisible');
         };
 
-        //io.sockets.emit('point_collect', {points});
     });
 
 });

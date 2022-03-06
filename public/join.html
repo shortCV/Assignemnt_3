@@ -41,8 +41,12 @@
                     socket.emit('circle');
                 });
 
-
+                socket.on('invisible', (data) => {
+                    console.log('circle invisble socket event: ');
+                    document.querySelector('#enemy').setAttribute("visible", false);
+                });
             });
+            
         </script>
 
     </body>
