@@ -6,6 +6,7 @@ const io        = require('socket.io')(server);
 
 const LISTEN_PORT   = 8081;
 
+
 server.listen(LISTEN_PORT);
 app.use(express.static(__dirname + '/public')); //set root path of server ...
 console.log("Listening on port: " + LISTEN_PORT );
@@ -25,6 +26,7 @@ app.get( '/join', function( req, res ){
 });*/
 
 //socket.io / websockets stuff
+let points = 0;
 
 io.on('connection', (socket) => {
     console.log(socket.id + ' is connected');
@@ -35,16 +37,17 @@ io.on('connection', (socket) => {
 
     socket.on('circle', (data) => {
         console.log('enemy event received');
-        /*points++;
-        console.log(points);
+        //points = points + 1;
+        console.log(points++)
+        console.log('', points);
 
-        const Context_AF = this;
+        /*const Context_AF = this;
         Context_AF.enemyAttack      = document.querySelector('#enemy');
-        Context_AF.enemyAttack.setAttribute("visible",true, {dur:Context_AF.data.duration, enabled:true});
+        Context_AF.enemyAttack.setAttribute("visible",true, {dur:Context_AF.data.duration, enabled:true});*/
 
         if(points >= 3){
-            Context_AF.enemyAttack.setAttribute("visible", false, {enabled:false});
-        }*/
+            //Context_AF.enemyAttack.setAttribute("visible", false, {enabled:false});
+        };
 
         //io.sockets.emit('point_collect', {points});
     });
