@@ -40,7 +40,7 @@ io.on('connection', (socket) => {
         console.log(points++)
         console.log('', points);
 
-        if(points >= 3){
+        if(points >= 10){
             io.sockets.emit('invisible');
         };
 
