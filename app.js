@@ -28,7 +28,7 @@ app.get( '/room2', function( req, res ){
 //socket.io / websockets stuff
 let points = 0;
 let fucker = 0;
-
+let bitch = 0;
 
 io.on('connection', (socket) => {
     console.log(socket.id + ' is connected');
@@ -48,12 +48,21 @@ io.on('connection', (socket) => {
 
     });
 
-    socket.on('fuck', (data) => {
+    socket.on('fuckiest', (data) => {
         console.log('fuck event received');
         console.log(fucker++)
         console.log('', fucker);
 
-        //io.emit('change_point', {fucker});
+        io.emit('client_points_2', {fucker});
+
+    });
+
+    socket.on('fuck', (data) => {
+        console.log('fuck event received');
+        console.log(bitch++)
+        console.log('', bitch);
+
+        io.emit('client_points', {bitch});
 
     });
 
