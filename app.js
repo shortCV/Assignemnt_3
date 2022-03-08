@@ -17,33 +17,49 @@ app.get( '/', function( req, res ){
     res.sendFile( __dirname + '/public/index.html' );
 });
 
-app.get( '/join', function( req, res ){ 
-    res.sendFile( __dirname + '/public/2D.html' );
+app.get( '/room1', function( req, res ){ 
+    res.sendFile( __dirname + '/public/room1.html' );
 });
 
-/*app.get( '/3D', function( req, res ){ 
-    res.sendFile( __dirname + '/public/3D.html' );
-});*/
+app.get( '/room2', function( req, res ){ 
+    res.sendFile( __dirname + '/public/room2.html' );
+});
 
 //socket.io / websockets stuff
 let points = 0;
+let fucker = 0;
+
 
 io.on('connection', (socket) => {
     console.log(socket.id + ' is connected');
 
-    socket.on('disconnect', () => {
-        console.log(socket.id + ' disconnected');
-    });
 
     socket.on('circle', (data) => {
         console.log('enemy event received');
         console.log(points++)
         console.log('', points);
 
+        io.sockets.emit('change_point', {points});
+
         if(points >= 10){
+            console.log('invisible event');
             io.sockets.emit('invisible');
         };
 
     });
+
+    socket.on('fuck', (data) => {
+        console.log('fuck event received');
+        console.log(fucker++)
+        console.log('', fucker);
+
+        //io.emit('change_point', {fucker});
+
+    });
+
+    socket.on('disconnect', () => {
+        console.log(socket.id + ' disconnected');
+    });
+    
 
 });
