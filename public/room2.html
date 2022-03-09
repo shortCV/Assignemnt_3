@@ -10,6 +10,7 @@
     </head>
    
 
+    <!-- scene same as room 1 -->
     <body>
         <a-scene background="color:rgb(0, 0, 0);">
             <a-assets>
@@ -36,7 +37,10 @@
             <a-entity id = "client_points" position="6 13 -22" scale="1 1 1" rotation="10 -27 0" text-geometry="value: Player Points; font: #optimerBoldFont; bevelSize: 0.1; bevelThickness: 0.1; curveSegments: 1; size: 1.5; height: 0.5;" material="color:#b31947; metalness:0.01;"></a-entity>
             <a-entity id = "enemy_health" position="-15 20 -15" scale="2 2 2" rotation="10 25 0" text-geometry="value: Enemy Health; font: #optimerBoldFont; bevelSize: 0.1; bevelThickness: 0.1; curveSegments: 1; size: 1.5; height: 0.5;" material="color:#b31947; metalness:0.01;"></a-entity>
         
-        </a-entity>
+            <a-entity id = "won" position="-4 2 -5" scale="1 1 1" visible="false" text-geometry="value: You Win; font: #optimerBoldFont; bevelSize: 0.1; bevelThickness: 0.1; curveSegments: 1; size: 1.5; height: 0.5;" material="color:pink; metalness:0.01;"></a-entity>
+            <a-entity id = "lost" position="-4 2 -5" scale="1 1 1" visible="false" text-geometry="value: You Lost; font: #optimerBoldFont; bevelSize: 0.1; bevelThickness: 0.1; curveSegments: 1; size: 1.5; height: 0.5;" material="color:pink; metalness:0.01;"></a-entity>
+            <a-entity id = "tied" position="-4 2 -5" scale="1 1 1" visible="false" text-geometry="value: You Tied; font: #optimerBoldFont; bevelSize: 0.1; bevelThickness: 0.1; curveSegments: 1; size: 1.5; height: 0.5;" material="color:pink; metalness:0.01;"></a-entity>
+
 
         </a-scene>
 
@@ -48,23 +52,37 @@
                 console.log('i am connected');
                   console.log(socket.id);
 
-                //let pointy = 0;
-
+                  //when enemy is clicked
                 document.querySelector('#enemy').addEventListener('click', function(){
                     console.log('enemy clicked');
                     socket.emit('circle');
-                    socket.emit('fuck');
+                    socket.emit('room2_points');
                 });
 
+                //make enemy invisble when defeated
                 socket.on('invisible', (data) => {
                     console.log('circle invisble socket event: ');
                     document.querySelector('#enemy').setAttribute("visible", false);
                 });
 
+                //if player won or lost
+                socket.on('final_goal_2', (data) => {
+                    if(data.room2_p > data.room1_p){
+                        document.querySelector('#won').setAttribute("visible", true);
+                    }
+                    else if(data.room2_p < data.room1_p){
+                        document.querySelector('#lost').setAttribute("visible", true);
+                    }
+                    else {
+                        document.querySelector('#tied').setAttribute("visible", true);
+                    };
+                });
+
+                //player points
                 socket.on('client_points', (data) => {
                     console.log('client points socket event: ');
-                    let c_points = data.bitch;
-                   // console.log('point update socket event: ' + pointy);
+                    let c_points = data.room2_p;
+
                    if(c_points == 1){
                     document.querySelector('#health').setAttribute("text-geometry", "value:1");
                    };
@@ -97,9 +115,10 @@
                    };
                 });
 
+                //enemy health
                 socket.on('change_point', (data) => {
                     let pointy = data.points;
-                   // console.log('point update socket event: ' + pointy);
+
                    if(pointy == 1){
                     document.querySelector('#points').setAttribute("text-geometry", "value:9");
                    };

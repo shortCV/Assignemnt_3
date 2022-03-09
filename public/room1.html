@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>user click Test</title>
+        <title>Room 1</title>
         <meta charset="utf-8" />
         <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+
+        <!-- text geo resource -->
         <script src="https://unpkg.com/aframe-text-geometry-component@0.5.1/dist/aframe-text-geometry-component.min.js"></script>
         <script src="myfont.typeface.js"></script>
         <script src="https://unpkg.com/aframe-environment-component@1.2.0/dist/aframe-environment-component.min.js"></script>
@@ -11,36 +13,49 @@
    
 
     <body>
-        <a-scene background="color:rgb(0, 0, 0);">
+        <a-scene>
             <a-assets>
                 <a-asset-item id="optimerBoldFont" src="https://rawgit.com/mrdoob/three.js/dev/examples/fonts/optimer_bold.typeface.json"></a-asset-item>
                 <a-mixin id="boldFont" text="font: #optimerBoldFont"></a-mixin>
             </a-assets>
 
+            <!-- camera -->
             <a-entity camera wasd-controls look-controls position="0 2.6 2">
                 <a-entity cursor="rayOrigin:mouse;" raycaster="far:20; interval:200; objects:.interactive"></a-entity>
             </a-entity>
 
+            <!-- contact environment -->
             <a-entity environment="preset: contact; groundColor: #101623; grid: cross; groundColor2: #cc8cd4; dressingColor: #b31947; gridColor: #b29ad6; dressingAmount: 30" visible=""><a-entity class="environment" position="0 50 0" light="type: hemisphere; color: #a3c6a9; intensity: 0.6; groundColor: #101623; dressingAmount:  30;" visible=""></a-entity><a-entity class="environment" position="0 2.01 -1" light="intensity: 0.6; shadowCameraLeft: -10; shadowCameraBottom: -10; shadowCameraRight: 10; shadowCameraTop: 10" visible=""></a-entity><a-entity rotation="-90 0 0" class="environmentGround environment" visible="" scale="1 1 4.91" shadow="cast: false; receive: false"></a-entity>
                 <a-entity class="environmentDressing environment" visible=""></a-entity>
                 <a-sky radius="200" theta-length="110" class="environment" material="shader: gradientshader; topColor: #76d5ca; bottomColor: #c799e5" visible="" geometry=""></a-sky>
             </a-entity>
 
+            <!-- circle enemy -->
             <a-entity id = "enemy" class="circle interactive" position="0 3 -4" geometry="primitive:sphere; radius:1; height:1;" material="color:#b31947"
-            animation__mouseenter="property:material.color; type:color; to:#40376E; startEvents:mouseenter; dur:200"
-            animation__mouseleave="property:material.color; type:color; to:#b31947; startEvents:mouseleave; dur:200"
-            animation__click="property:position; from:0 3.55 -4; to:0 3 -4; startEvents:click; dur:300" shadow></a-entity>
+                animation__mouseenter="property:material.color; type:color; to:#40376E; startEvents:mouseenter; dur:200"
+                animation__mouseleave="property:material.color; type:color; to:#b31947; startEvents:mouseleave; dur:200"
+                animation__click="property:position; from:0 3.55 -4; to:0 3 -4; startEvents:click; dur:300" shadow>
+            </a-entity>
          
+            <!-- points + health -->
+                <!-- Enemy health -->
             <a-entity id = "points" position="-15 2 -15" scale="9 9 9" rotation="10 25 0" text-geometry="value: 10; font: #optimerBoldFont; bevelSize: 0.1; bevelThickness: 0.1; curveSegments: 1; size: 1.5; height: 0.5;" material="color:#b31947; metalness:0.01;"></a-entity>
+                <!-- enemy health text -->
             <a-entity id = "enemy_health" position="-15 20 -15" scale="2 2 2" rotation="10 25 0" text-geometry="value: Enemy Health; font: #optimerBoldFont; bevelSize: 0.1; bevelThickness: 0.1; curveSegments: 1; size: 1.5; height: 0.5;" material="color:#b31947; metalness:0.01;"></a-entity>
+                <!-- player points -->
             <a-entity id = "healthy" position="6 2 -22" scale="5 5 5" rotation="10 -27 0" text-geometry="value: 0; font: #optimerBoldFont; bevelSize: 0.1; bevelThickness: 0.1; curveSegments: 1; size: 1.5; height: 0.5;" material="color:#b31947; metalness:0.01;"></a-entity>
+                <!-- room 1 player points text-->
             <a-entity id = "client_points" position="6 13 -22" scale="1 1 1" rotation="10 -27 0" text-geometry="value: Player Points; font: #optimerBoldFont; bevelSize: 0.1; bevelThickness: 0.1; curveSegments: 1; size: 1.5; height: 0.5;" material="color:#b31947; metalness:0.01;"></a-entity>
 
-        </a-entity>
+            <!-- end text -->
+            <a-entity id = "won" position="-4 2 -5" scale="1 1 1" visible="false" text-geometry="value: You Win; font: #optimerBoldFont; bevelSize: 0.1; bevelThickness: 0.1; curveSegments: 1; size: 1.5; height: 0.5;" material="color:pink; metalness:0.01;"></a-entity>
+            <a-entity id = "lost" position="-4 2 -5" scale="1 1 1" visible="false" text-geometry="value: You Lost; font: #optimerBoldFont; bevelSize: 0.1; bevelThickness: 0.1; curveSegments: 1; size: 1.5; height: 0.5;" material="color:pink; metalness:0.01;"></a-entity>
+            <a-entity id = "tied" position="-4 2 -5" scale="1 1 1" visible="false" text-geometry="value: You Tied; font: #optimerBoldFont; bevelSize: 0.1; bevelThickness: 0.1; curveSegments: 1; size: 1.5; height: 0.5;" material="color:pink; metalness:0.01;"></a-entity>
 
         </a-scene>
 
         <script src="/socket.io/socket.io.js"></script>
+
         <script>
             let socket = io();
     
@@ -48,23 +63,38 @@
                 console.log('i am connected');
                 console.log(socket.id);
 
-                //let pointy = 0;
-
-                document.querySelector('#enemy').addEventListener('click', function(){
+                //enemy/circle code
+                document.querySelector('#enemy').addEventListener('click', function(){ //once clicked
                     console.log('enemy clicked');
-                    socket.emit('circle');
-                    socket.emit('fuckiest');
+                    socket.emit('circle');  //call circle js code to get enemy health 
+                    socket.emit('room1_points');    //get player points
                 });
 
+                //called when enemy is defeated
                 socket.on('invisible', (data) => {
-                    console.log('circle invisble socket event: ');
-                    document.querySelector('#enemy').setAttribute("visible", false);
+                    console.log('circle invisible socket event: ');
+                    document.querySelector('#enemy').setAttribute("visible", false);    //make circle invisible
                 });
 
+                //code to showcase if you have won or lost
+                socket.on('final_goal_1', (data) => {
+                    if(data.room2_p < data.room1_p){
+                        document.querySelector('#won').setAttribute("visible", true);
+                    }
+                    else if(data.room2_p > data.room1_p){
+                        document.querySelector('#lost').setAttribute("visible", true);
+                    }
+                    else {
+                        document.querySelector('#tied').setAttribute("visible", true);
+                    };
+                });
+
+
+                //player points
                 socket.on('client_points_2', (data) => {
                     console.log('client points socket event: ');
-                    let c_points = data.fucker;
-                   // console.log('point update socket event: ' + pointy);
+                    let c_points = data.room1_p;
+
                    if(c_points == 1){
                     document.querySelector('#healthy').setAttribute("text-geometry", "value:1");
                    };
@@ -97,9 +127,10 @@
                    };
                 });
 
+                //enemy health
                 socket.on('change_point', (data) => {
                    let pointy = data.points;
-                   // console.log('point update socket event: ' + pointy);
+
                    if(pointy == 1){
                     document.querySelector('#points').setAttribute("text-geometry", "value:9");
                    };
